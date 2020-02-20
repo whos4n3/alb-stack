@@ -29,12 +29,16 @@ phases:
       - cd "$CODEBUILD_SRC_DIR"
       - ls -al
       - ./install_tflint.sh && rm -f install_tflint.sh
-
+      
+      #VALIDATION TEST---- Linting using TFLint to check for clear and obvious errors. 
       - terraform --version
       - cd "$CODEBUILD_SRC_DIR" && cd app/
       - tflint --format=json
       - cd "$CODEBUILD_SRC_DIR"
       - tflint --format=json
+
+      #UNIT and INTEGRATION TEST ------ Running go test command from the test folder to do an automatic build and destroy of the stack.
+      - cd test/ && go test -v
       
 
   build:
