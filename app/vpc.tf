@@ -10,6 +10,10 @@ resource "aws_vpc" "vpc_methods" {
   enable_dns_hostnames = true
   tags {
     Name = "vpc_methods"
+        Department          = "Cloud"
+    Env                 = "Sandbox"
+    Application         = "Sample"
+
   }
 }
 resource "aws_subnet" "public_subnet" {
@@ -20,6 +24,9 @@ resource "aws_subnet" "public_subnet" {
   map_public_ip_on_launch = true
   tags {
     Name = "PublicSubnet"
+    Department          = "Cloud"
+    Env                 = "Sandbox"
+    Application         = "Sample"
   }
 }
 resource "aws_subnet" "private_subnet" {
@@ -30,15 +37,21 @@ resource "aws_subnet" "private_subnet" {
   map_public_ip_on_launch = false
   tags {
     Name = "PrivateSubnet"
+    Department          = "Cloud"
+    Env                 = "Sandbox"
+    Application         = "Sample"
   }
 }
 # adding internet gateway for external communication
 resource "aws_internet_gateway" "internet_gateway" {
   vpc_id =  aws_vpc.vpc_methods.id 
 
-  tags = {
-    Name    = "Internet Gateway"
-    Creator = "Whosane"
+  tags  {
+    Name                = "Internet Gateway"
+    Creator             = "Whosane"
+    Department          = "Cloud"
+    Env                 = "Sandbox"
+    Application         = "Sample"
   }
 }
 
@@ -64,9 +77,7 @@ resource "aws_nat_gateway" "nat" {
 
 # creating private route table 
 resource "aws_route_table" "private_route_table" {
-  vpc_id = aws_vpc.vpc_methods.id
-
-
+  vpc_id = aws_vpc.vpc_methods.id       
 }
 
 # adding private route table to nat
@@ -78,13 +89,13 @@ resource "aws_route" "private_route" {
 
 # associating public subnet to public route table
 resource "aws_route_table_association" "public_subnet_association" {
-  subnet_id      = aws_subnet.public_subnet[0].id , aws_subnet.public_subnet[1].id,aws_subnet.public_subnet[2].id 
+  subnet_id      = [aws_subnet.public_subnet[0].id, aws_subnet.public_subnet[1].id,aws_subnet.public_subnet[2].id]
   route_table_id = aws_vpc.vpc_methods.main_route_table_id
 }
 
 # associating private subnet to private route table
 resource "aws_route_table_association" "private_subnet_association1" {
-  subnet_id      = ,aws_subnet.private_subnet[3].id,aws_subnet.private_subnet[2].id 
+  subnet_id      = [aws_subnet.private_subnet[3].id,aws_subnet.private_subnet[2].id] 
   route_table_id = aws_route_table.private_route_table.id
 } 
 

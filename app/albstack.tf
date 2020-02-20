@@ -13,6 +13,9 @@ resource "aws_autoscaling_group" "webserver-asg" {
   tag {
     key                 = "Name"
     value               = "Webservers ASG"
+    Department          = "Cloud"
+    Env                 = "Sandbox"
+    Application         = "Sample"
     propagate_at_launch = true
   }
 }
