@@ -39,7 +39,6 @@ variable "default_tags" {
 
 variable "subnet_cidrs_priv" {
   description = "Subnet CIDRs for Private subnets (length must match configured availability_zones)"
-  # this could be further simplified / computed using cidrsubnet() etc.
   # https://www.terraform.io/docs/configuration/interpolation.html#cidrsubnet-iprange-newbits-netnum-
   default = ["10.0.20.0/24", "10.0.21.0/24", "10.0.22.0/24"]
   type = list
@@ -47,7 +46,6 @@ variable "subnet_cidrs_priv" {
 
 variable "subnet_cidrs_pub" {
   description = "Subnet CIDRs for Private subnets (length must match configured availability_zones)"
-  # this could be further simplified / computed using cidrsubnet() etc.
   # https://www.terraform.io/docs/configuration/interpolation.html#cidrsubnet-iprange-newbits-netnum-
   default = ["10.0.10.0/24", "10.0.11.0/24", "10.0.12.0/24"]
   type = list

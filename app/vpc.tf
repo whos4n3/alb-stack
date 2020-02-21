@@ -53,11 +53,13 @@ resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.elastic_ip.id
   subnet_id     = aws_subnet.public_subnet[0].id
   depends_on    = [aws_internet_gateway.internet_gateway]
+  tags = merge(var.default_tags, map("Name", "Nat GW"))
 }
 
 # creating private route table 
 resource "aws_route_table" "private_route_table" {
-  vpc_id = aws_vpc.vpc_methods.id       
+  vpc_id = aws_vpc.vpc_methods.id   
+  tags = merge(var.default_tags, map("Name", "Private RouteTable"))    
 }
 
 # adding private route table to nat

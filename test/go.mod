@@ -1,4 +1,5 @@
 module github.com/whos4n3/alb-stack/test
+
 go 1.13
 
 require (
