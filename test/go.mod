@@ -1,4 +1,4 @@
-module github.com/gruntwork-io/infrastructure-as-code-testing-talk
+module github.com/whos4n3/alb-stack/test
 
 go 1.13
 
