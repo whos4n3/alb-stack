@@ -31,7 +31,7 @@ variable "server_port" {
 variable "default_tags" { 
     type = map 
     default = { 
-        Department: "Cloud",
+        Department: "CDC",
         App: "Sample",
         Env: "Sandbox"
   } 
