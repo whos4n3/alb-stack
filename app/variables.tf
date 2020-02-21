@@ -8,9 +8,9 @@ variable "aws_region" {
 variable "aws_amis" {
   default = {
     eu-west-1 = "ami-0713f98de93617bb4"
+    eu-west-2 = "ami-0389b2a3c4948b1a0"
     us-east-1 = "ami-062f7200baf2fa504"
     us-west-1 = "ami-03caa3f860895f82e"
-    us-west-2 = "ami-04590e7389a6e577c"
   }
 }
 
@@ -26,4 +26,29 @@ variable "server_port" {
   description = "The port the server will use for HTTP requests"
   type        = number
   default     = 80
+}
+
+variable "default_tags" { 
+    type = map 
+    default = { 
+        department: "Cloud",
+        app: "Sample",
+        env: "Sandbox"
+  } 
+}
+
+variable "subnet_cidrs_priv" {
+  description = "Subnet CIDRs for Private subnets (length must match configured availability_zones)"
+  # this could be further simplified / computed using cidrsubnet() etc.
+  # https://www.terraform.io/docs/configuration/interpolation.html#cidrsubnet-iprange-newbits-netnum-
+  default = ["10.0.20.0/24", "10.0.21.0/24", "10.0.22.0/24"]
+  type = list
+}
+
+variable "subnet_cidrs_pub" {
+  description = "Subnet CIDRs for Private subnets (length must match configured availability_zones)"
+  # this could be further simplified / computed using cidrsubnet() etc.
+  # https://www.terraform.io/docs/configuration/interpolation.html#cidrsubnet-iprange-newbits-netnum-
+  default = ["10.0.10.0/24", "10.0.11.0/24", "10.0.12.0/24"]
+  type = list
 }

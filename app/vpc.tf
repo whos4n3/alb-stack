@@ -1,6 +1,6 @@
 # Initialising AWS Provider in the correct region
 provider "aws" {
-  region = "var.aws_region"
+  region = var.aws_region
 }
 
 #setting up VPC
@@ -8,51 +8,31 @@ data "aws_availability_zones" "available" {}
 resource "aws_vpc" "vpc_methods" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_hostnames = true
-  tags {
-    Name = "vpc_methods"
-        Department          = "Cloud"
-    Env                 = "Sandbox"
-    Application         = "Sample"
-
-  }
+  tags = merge(var.default_tags, map("Name", "Methods VPC"))
+  
 }
 resource "aws_subnet" "public_subnet" {
-  count = "${length(data.aws_availability_zones.available.names)}"
-  vpc_id = "${aws_vpc.vpc_methods.id}"
+  count = length(data.aws_availability_zones.available.names)
+  vpc_id = aws_vpc.vpc_methods.id
   cidr_block = "10.0.${10+count.index}.0/24"
-  availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
+  availability_zone = data.aws_availability_zones.available.names[count.index]
   map_public_ip_on_launch = true
-  tags {
-    Name = "PublicSubnet"
-    Department          = "Cloud"
-    Env                 = "Sandbox"
-    Application         = "Sample"
-  }
+  tags = merge(var.default_tags, map("Name", "PublicSubnet"))
+  
 }
 resource "aws_subnet" "private_subnet" {
-  count = "${length(data.aws_availability_zones.available.names)}"
-  vpc_id = "${aws_vpc.vpc_methods.id}"
+  count = length(data.aws_availability_zones.available.names)
+  vpc_id = aws_vpc.vpc_methods.id
   cidr_block = "10.0.${20+count.index}.0/24"
-  availability_zone= "${data.aws_availability_zones.available.names[count.index]}"
+  availability_zone= data.aws_availability_zones.available.names[count.index]
   map_public_ip_on_launch = false
-  tags {
-    Name = "PrivateSubnet"
-    Department          = "Cloud"
-    Env                 = "Sandbox"
-    Application         = "Sample"
-  }
+  tags = merge(var.default_tags, map("Name", "PrivateSubnet"))
 }
 # adding internet gateway for external communication
 resource "aws_internet_gateway" "internet_gateway" {
   vpc_id =  aws_vpc.vpc_methods.id 
 
-  tags  {
-    Name                = "Internet Gateway"
-    Creator             = "Whosane"
-    Department          = "Cloud"
-    Env                 = "Sandbox"
-    Application         = "Sample"
-  }
+  tags = merge(var.default_tags, map("Name", "Methods IGW"))
 }
 
 # create external route to IGW
@@ -71,7 +51,7 @@ resource "aws_eip" "elastic_ip" {
 # creating the NAT gateway
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.elastic_ip.id
-  subnet_id     = aws_subnet.public_subnet.id
+  subnet_id     = aws_subnet.public_subnet[0].id
   depends_on    = [aws_internet_gateway.internet_gateway]
 }
 
@@ -89,13 +69,17 @@ resource "aws_route" "private_route" {
 
 # associating public subnet to public route table
 resource "aws_route_table_association" "public_subnet_association" {
-  subnet_id      = [aws_subnet.public_subnet[0].id, aws_subnet.public_subnet[1].id,aws_subnet.public_subnet[2].id]
+    count = length(var.subnet_cidrs_pub)
+  subnet_id       = element(aws_subnet.public_subnet.*.id, count.index)
+  #subnet_id      = [aws_subnet.public_subnet[0].id, aws_subnet.public_subnet[1].id,aws_subnet.public_subnet[2].id]
   route_table_id = aws_vpc.vpc_methods.main_route_table_id
 }
 
 # associating private subnet to private route table
 resource "aws_route_table_association" "private_subnet_association1" {
-  subnet_id      = [aws_subnet.private_subnet[3].id,aws_subnet.private_subnet[2].id] 
+  count = length(var.subnet_cidrs_priv)
+  subnet_id       = element(aws_subnet.private_subnet.*.id, count.index)
+  #subnet_id      = [aws_subnet.private_subnet[3].id,aws_subnet.private_subnet[2].id] 
   route_table_id = aws_route_table.private_route_table.id
 } 
 

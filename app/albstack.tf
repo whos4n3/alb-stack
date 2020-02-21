@@ -10,14 +10,29 @@ resource "aws_autoscaling_group" "webserver-asg" {
   #load_balancers    = [aws_lb.methods-elb.id]
   health_check_type = "ELB"
 
-  tag {
-    key                 = "Name"
-    value               = "Webservers ASG"
-    Department          = "Cloud"
-    Env                 = "Sandbox"
-    Application         = "Sample"
-    propagate_at_launch = true
-  }
+   tag {
+        key   = "App"
+        value = "Sample"
+        propagate_at_launch = true
+    }
+
+    tag {
+        key   = "Department"
+        value = "Cloud"
+        propagate_at_launch = true
+    }
+
+    tag {
+        key   = "Env"
+        value = "Sandbox"
+        propagate_at_launch = true
+    }
+
+    tag {
+        key   = "Name"
+        value = "Method ASG"
+        propagate_at_launch = true
+    }
 }
 
 #Creating the launch configuration to attach to the ASG
