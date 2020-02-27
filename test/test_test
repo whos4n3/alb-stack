@@ -47,8 +47,9 @@ func validateStack(t *testing.T, terraformOptions *terraform.Options) {
 
 	// Verify the app returns a 200 OK with the text in the body!
 	expectedStatus := 200
-	expectedBody := "Welcome to Whosane's Website. Look around and enjoy"
-	maxRetries := 15
+	//validateResponse := 
+	//expectedBody := ""  
+	maxRetries := 10
 	timeBetweenRetries := 3 * time.Second
-	http_helper.HttpGetWithRetry(t, url, nil, expectedStatus, expectedBody, maxRetries, timeBetweenRetries, )
+	http_helper.HttpGetWithRetryWithCustomValidation(t, url, nil, maxRetries, timeBetweenRetries, expectedStatus)
 }
