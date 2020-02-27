@@ -15,7 +15,7 @@ variable "aws_amis" {
 }
 
 variable "instance_type" {
-  default = "t2.micro"
+  default = "t3.micro"
 }
 
 variable "instance_count" {
