@@ -12,7 +12,7 @@ resource "aws_autoscaling_group" "webserver-asg" {
 
    tag {
         key   = "App"
-        value = "Sample"
+        value = "2TierWebApp"
         propagate_at_launch = true
     }
 
