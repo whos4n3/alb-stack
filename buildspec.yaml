@@ -38,7 +38,7 @@ phases:
       - tflint --format=json
 
       #UNIT and INTEGRATION TEST ------ Running go test command from the test folder to do an automatic build and destroy of the stack.
-      - cd test/ && go test -v
+      #- cd test/ && go test -v
       
 
   build:
